@@ -1,4 +1,5 @@
 import type { GetStaticProps } from 'next';
+import Navbar from '../components/Navbar';
 
 type Car = {
   id: string;
@@ -17,6 +18,7 @@ export default function Home({ cars }: { cars: Car[] }) {
 
   return (
     <div className='w-full flex flex-col p-20'>
+       <Navbar />
      <h1 className='text-3xl text-center'>Car Rental App</h1>
       <div className='flex flex-col'>
       <h2 className='text-xl'>Available Cars</h2>
