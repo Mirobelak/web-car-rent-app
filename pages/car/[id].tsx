@@ -2,6 +2,8 @@ import { useRouter } from 'next/router';
 import Navbar from '../../components/Navbar';
 import { GetServerSideProps } from 'next';
 import {Car} from "../index"
+import CheckoutForm from '../../components/CheckoutForm';
+
 
 export default function CarPage({car} : {car: Car}) {
   const router = useRouter();
@@ -31,7 +33,7 @@ export default function CarPage({car} : {car: Car}) {
           <p className="mb-4 text-2xl">Available from: {car.availableFrom}</p>
         </div>
         <div className="mt-8 w-full lg:w-1/2 flex justify-evenly items-center">
-            <button className="bg-blue-500 text-white py-2 px-4 mr-4 rounded">
+            <button className="bg-orange-400 text-white py-2 px-4 mr-4 rounded">
             &#8383; Pay with Crypto  &#8383;
             </button>
             <button className="bg-green-500 text-white py-2 px-4 rounded">
@@ -43,7 +45,7 @@ export default function CarPage({car} : {car: Car}) {
       <div className='flex '>
       <div className="mt-16 w-full lg:w1/2">
         <h2 className="text-3xl font-semibold mb-6">Reviews</h2>
-        <p>blablabla</p>
+        <p>Be first to add review </p>
         {/* {car.reviews.map((review, index) => (
           <div key={index} className="bg-gray-100 p-4 mb-4 rounded">
             <h3 className="font-semibold mb-2">{review.author}</h3>
@@ -54,14 +56,15 @@ export default function CarPage({car} : {car: Car}) {
       </div>
 
       {/* Video player */}
-      <div className="mt-5 py-5 w-full lg:w1/2">
+      <div className="my-5 py-5 w-full lg:w1/2">
   <h2 className="text-3xl font-semibold mb-6">Video</h2>
   <div className="w-full aspect-w-16 aspect-h-9">
   <iframe width="560" height="315" src="https://www.youtube.com/embed/Wy1lHtzz7ms" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"></iframe>
   </div>
 </div>
       </div>
-    
+      <CheckoutForm />
+
     </div>
   );
 }
