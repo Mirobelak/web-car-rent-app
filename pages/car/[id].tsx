@@ -72,7 +72,6 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     // Fetch the car data from the API
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/car?id=${id}`);
     const car = await res.json();
-    console.log('Response data: CAR', car);
 
   
     return {

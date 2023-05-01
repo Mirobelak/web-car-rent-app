@@ -1,4 +1,4 @@
-import type { GetStaticProps } from 'next';
+import type { GetServerSideProps } from 'next';
 import Navbar from '../components/Navbar';
 import Link from 'next/link';
 import {ObjectId  } from 'mongodb';
@@ -42,18 +42,13 @@ export default function Home({ cars }: { cars: Car[] }) {
   );
 }
 
-export const getStaticProps: GetStaticProps = async () => {
+export const getServerSideProps: GetServerSideProps = async () => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/cars`);
-  const data = await res.text();
-  console.log('Response data:', data);
-
-  const cars: Car[] = JSON.parse(data);
-
+  const cars: Car[] = await res.json();
 
   return {
     props: {
       cars,
     },
-    revalidate: 60, // Optional: Set the number of seconds to re-fetch the data.
   };
 };
