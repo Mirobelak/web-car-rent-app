@@ -43,7 +43,7 @@ export default function Home({ cars }: { cars: Car[] }) {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/cars`);
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cars`);
   const cars: Car[] = await res.json();
 
   return {
