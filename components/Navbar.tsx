@@ -1,4 +1,7 @@
 import React from 'react';
+import useWeb3Modal from '../lib/useWeb3Modal';
+import { useRouter } from 'next/router';
+
 
 const Navbar: React.FC = () => {
   const menuItems = [
@@ -7,6 +10,9 @@ const Navbar: React.FC = () => {
     { id: 'faq', label: 'FAQ' },
   ];
 
+  const { web3, connectWallet, account, disconnectWallet } = useWeb3Modal();
+
+  const router = useRouter();
   return (
     <header
       style={{
@@ -19,7 +25,7 @@ const Navbar: React.FC = () => {
     >
       {/* Logo */}
       <div>
-        <img src='/images/logo.png' className='w-20 h-20' />
+        <img src='/images/logo.png' className='w-20 h-20 cursor-pointer' onClick={()=> router.push("/") } />
       </div>
 
       {/* Menu items */}
@@ -46,7 +52,8 @@ const Navbar: React.FC = () => {
       </nav>
 
       {/* Web3 wallet button */}
-      <button
+      {!account ? (
+        <button
         style={{
           background: '#1b75bc',
           color: '#fff',
@@ -55,9 +62,25 @@ const Navbar: React.FC = () => {
           border: 'none',
           cursor: 'pointer',
         }}
+        onClick={connectWallet}
       >
         Connect Wallet
       </button>
+      ) : (
+        <button
+        style={{
+          background: '#1b75bc',
+          color: '#fff',
+          padding: '0.5rem 1rem',
+          borderRadius: '3px',
+          border: 'none',
+          cursor: 'pointer',
+        }}
+        onClick={disconnectWallet}
+      >
+        {`${account}`.substring(0, 6)}...{`${account}`.substring(38, 42)}
+      </button>
+      )}
     </header>
   );
 };

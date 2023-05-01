@@ -1,8 +1,10 @@
 import type { GetStaticProps } from 'next';
 import Navbar from '../components/Navbar';
+import Link from 'next/link';
+import {ObjectId  } from 'mongodb';
 
-type Car = {
-  id: string;
+export type Car = {
+  _id: ObjectId;
   name: string;
   description: string;
   pricePerMonth: number;
@@ -19,12 +21,12 @@ export default function Home({ cars }: { cars: Car[] }) {
   return (
     <div className='w-full flex flex-col p-20'>
        <Navbar />
-     <h1 className='text-3xl text-center'>Car Rental App</h1>
+       <h1 className="text-4xl font-semibold my-6 text-center">RENT YOUR DREAM CAR</h1>
       <div className='flex flex-col'>
-      <h2 className='text-xl'>Available Cars</h2>
+      <h2 className='text-xl px-4'>Available Cars</h2>
         <div className='flex '>
         {cars?.map((car, index) => (
-          <div key={index} style={{ border: '1px solid #ccc', padding: '1rem', margin: '1rem' }}>
+        <Link href={`/car/${car._id}`} key={index} className='hover:opacity-80' style={{ border: '1px solid #ccc', padding: '1rem', margin: '1rem' }}>
             <h3>{car.name}</h3>
             <img src={car.image} alt={car.name} style={{ width: '100%', maxHeight: '200px'}} />
             <p>{car.description}</p>
@@ -32,7 +34,7 @@ export default function Home({ cars }: { cars: Car[] }) {
             <p>Available from: {car.availableFrom}</p>
             <p>Rating: {car.rating}</p>
             <p>Locality: {car.locality}</p>
-          </div>
+          </Link>
         ))}
         </div>
       </div>
