@@ -1,17 +1,44 @@
-import { useRouter } from 'next/router';
+import { useState } from 'react';
 import Navbar from '../../components/Navbar';
 import { GetServerSideProps } from 'next';
 import {Car} from "../index"
-import CheckoutForm from '../../components/CheckoutForm';
+import { fetchPostJSON } from '../../utils/api-helpers'
+import getStripe from '../../utils/getStripejs'
+import LoadingSpinner from '@/components/LoadingSpinner';
 
 
 export default function CarPage({car} : {car: Car}) {
-  const router = useRouter();
-  const { id } = router.query;
 
-  if(!id) return (<div>loading...</div>)
+  const [loading, setLoading] = useState(false)
 
-  if(!car) return (<div>loading...</div>)
+
+  const handleSubmit = async () => {
+    setLoading(true)
+    // Create a Checkout Session.
+    const response = await fetchPostJSON('/api/stripe', {
+      amount: car.pricePerMonth,
+      image: car.image,
+    })
+
+    if (response.statusCode === 500) {
+      console.error(response.message)
+      return
+    }
+
+    // Redirect to Checkout.
+    const stripe = await getStripe()
+    const { error } = await stripe!.redirectToCheckout({
+     
+      sessionId: response.id,
+    })
+    // If `redirectToCheckout` fails due to a browser or network
+    // error, display the localized error message to your customer
+    // using `error.message`.
+    console.warn(error.message)
+    setLoading(false)
+  }
+
+  if(loading || !car) return (<LoadingSpinner/>)
 
   return (
     <div className="container mx-auto px-4">
@@ -36,7 +63,7 @@ export default function CarPage({car} : {car: Car}) {
             <button className="bg-orange-400 text-white py-2 px-4 mr-4 rounded">
             &#8383; Pay with Crypto  &#8383;
             </button>
-            <button className="bg-green-500 text-white py-2 px-4 rounded">
+            <button className="bg-green-500 text-white py-2 px-4 rounded" onClick={handleSubmit}>
               Pay with Fiat Money
             </button>
           </div>
@@ -63,8 +90,6 @@ export default function CarPage({car} : {car: Car}) {
   </div>
 </div>
       </div>
-      <CheckoutForm />
-
     </div>
   );
 }

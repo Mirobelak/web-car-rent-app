@@ -5,7 +5,6 @@ import { formatAmountForStripe } from '../../utils/stripe-helpers'
 
 import Stripe from 'stripe'
 
-
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
     apiVersion: "2022-11-15",
 })
@@ -16,6 +15,7 @@ export default async function handler(
 ) {
   if (req.method === 'POST') {
     const amount: number = req.body.amount
+    const image : string = req.body.image
     try {
       // Validate the amount that was passed from the client.
       if (!(amount >= MIN_AMOUNT && amount <= MAX_AMOUNT)) {
@@ -23,7 +23,7 @@ export default async function handler(
       }
       // Create Checkout Sessions from body params.
       const params: Stripe.Checkout.SessionCreateParams = {
-        submit_type: 'donate',
+        submit_type: 'pay',
         payment_method_types: ['card'],
         mode: 'payment',
         line_items: [
@@ -31,7 +31,8 @@ export default async function handler(
                 price_data: {
                     currency: CURRENCY,
                     product_data: {
-                        name: 'Donation',
+                        name: 'Payment for renting a car',
+                        images: [image],
                     },
                     unit_amount: formatAmountForStripe(amount, CURRENCY),
                     
@@ -39,8 +40,8 @@ export default async function handler(
                   quantity: 1,
             },
         ],
-        success_url: `${req.headers.origin}/result?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${req.headers.origin}/donate-with-checkout`,
+        success_url: `${req.headers.origin}/`,
+        cancel_url: `${req.headers.origin}/`,
       }
       const checkoutSession: Stripe.Checkout.Session =
         await stripe.checkout.sessions.create(params)
